@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dinhata Online Shop</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="navigation.js"></script>
+</head>
+<body>
+    <header>
+        <div class="logo">Dinhata Shop</div>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="products.html">Products</a>
+            <a href="cart.html">Cart</a>
+            <a href="admin.html">Admin</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div>
+                <h1>Dinhata Same-Day Delivery</h1>
+                <p>All local market products at your doorstep within hours.</p>
+                <a href="products.html" class="cta-btn">Start Shopping</a>
+            </div>
+        </section>
+
+        <h2 class="section-title">Shop by Category</h2>
+        <div class="categories">
+            <div class="cat-box">👕 জামা কাপড়</div>
+            <div class="cat-box">📱 ইলেকট্রনিক্স</div>
+            <div class="cat-box">💄 কসমেটিকস</div>
+            <div class="cat-box">🏠 হোম আইটেম</div>
+            <div class="cat-box">🛒 গ্রোসারি</div>
+        </div>
+
+        <h2 class="section-title">Popular Items</h2>
+        <div class="products" id="productsContainer">
+            <!-- Products will be loaded by JavaScript -->
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2025 Dinhata Online Shopping | Premium Version Products – Dinhata Shop</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Show only 3 products on homepage
+        function renderHomeProducts() {
+            const container = document.getElementById('productsContainer');
+            if (!container) return;
+            
+            const allProducts = getProducts();
+            const homeProducts = allProducts.slice(0, 3); // Show only first 3
+            
+            container.innerHTML = '';
+            homeProducts.forEach(p => {
+                container.innerHTML += `
+                    <div class="product">
+                        <img src="${p.img}" alt="${p.name}">
+                        <div class="info">
+                            <div class="title">${p.name}</div>
+                            <div class="price">৳ ${p.price}</div>
+                            <button class="add-btn" onclick="addToCart(${p.id})">Add to Cart</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Initialize homepage
+        renderHomeProducts();
+    </script>
+</body>
+</html>

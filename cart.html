@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart - Dinhata Shop</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="navigation.js"></script>
+</head>
+<body>
+    <header>
+        <div class="logo">Dinhata Shop</div>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="products.html">Products</a>
+            <a href="cart.html">Cart</a>
+            <a href="admin.html">Admin</a>
+        </nav>
+    </header>
+
+    <div class="cart-container">
+        <h2>Your Cart</h2>
+        <div id="cartItems">
+            <!-- Cart items will be loaded here -->
+        </div>
+        <a href="checkout.html" class="checkout-btn">Proceed to Checkout</a>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        function loadCart() {
+            const box = document.getElementById('cartItems');
+            const cart = getCart();
+            
+            if (cart.length === 0) {
+                box.innerHTML = '<p>Your cart is empty</p>';
+                return;
+            }
+            
+            box.innerHTML = '';
+            cart.forEach((item, index) => {
+                box.innerHTML += `
+                    <div class='cart-item'>
+                        <span>${item.name} (৳${item.price})</span>
+                        <button class="delete-btn" onclick='removeItem(${index})'>X</button>
+                    </div>
+                `;
+            });
+        }
+
+        function removeItem(index) {
+            removeFromCart(index);
+            loadCart();
+        }
+
+        loadCart();
+    </script>
+</body>
+</html>

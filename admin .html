@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Dinhata Shop</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="navigation.js"></script>
+</head>
+<body>
+    <header>
+        <div class="logo">Dinhata Shop</div>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="products.html">Products</a>
+            <a href="cart.html">Cart</a>
+            <a href="admin.html">Admin</a>
+        </nav>
+    </header>
+
+    <div class="admin-container">
+        <h2>Add New Product</h2>
+        <form class="admin-form" id="addProductForm">
+            <input type="text" id="pName" placeholder="Product Name" required>
+            <input type="number" id="pPrice" placeholder="Price" required>
+            <input type="text" id="pImage" placeholder="Image URL" required>
+            <input type="text" id="pCategory" placeholder="Category" required>
+            <button type="submit">Add Product</button>
+        </form>
+
+        <h2>Manage Products</h2>
+        <div id="adminProductList">
+            <!-- Products will be listed here -->
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Admin functions
+        const addForm = document.getElementById('addProductForm');
+        if (addForm) {
+            addForm.addEventListener('submit', e => {
+                e.preventDefault();
+                const products = getProducts();
+                
+                const newProd = {
+                    id: Date.now(),
+                    name: document.getElementById('pName').value,
+                    price: document.getElementById('pPrice').value,
+                    img: document.getElementById('pImage').value,
+                    cat: document.getElementById('pCategory').value
+                };
+                
+                products.push(newProd);
+                saveProducts(products);
+                alert('✅ Product Added Successfully');
+                addForm.reset();
+                loadAdminProducts();
+            });
+        }
+
+        function loadAdminProducts() {
+            const box = document.getElementById('adminProductList');
+            if (!box) return;
+            
+            const products = getProducts();
+            box.innerHTML = '';
+            products.forEach(p => {
+                box.innerHTML += `
+                    <div class="product-item">
+                        <div><b>${p.name}</b><br>৳${p.price} | ${p.cat}</div>
+                        <button class="delete-btn" onclick="deleteProduct(${p.id})">Delete</button>
+                    </div>
+                `;
+            });
+        }
+
+        function deleteProduct(id) {
+            const products = getProducts();
+            const updatedProducts = products.filter(p => p.id !== id);
+            saveProducts(updatedProducts);
+            loadAdminProducts();
+        }
+
+        // Load admin products on page load
+        loadAdminProducts();
+    </script>
+</body>
+</html>
