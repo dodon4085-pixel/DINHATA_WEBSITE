@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Dinhata Shop</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">Dinhata Shop</div>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="products.html">Products</a>
+            <a href="cart.html">Cart</a>
+            <a href="admin.html">Admin</a>
+        </nav>
+    </header>
+
+    <div class="checkout-container">
+        <h2>Checkout</h2>
+        <form class="checkout-form" id="checkoutForm">
+            <input type="text" id="cName" placeholder="Your Name" required>
+            <input type="tel" id="cPhone" placeholder="Phone Number" required>
+            <input type="text" id="cAddress" placeholder="Delivery Address" required>
+            <button type="submit">Place Order</button>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.getElementById('checkoutForm').addEventListener('submit', e => {
+            e.preventDefault();
+            const cartData = getCart();
+            
+            if (cartData.length === 0) {
+                alert('Your cart is empty!');
+                return;
+            }
+            
+            const order = {
+                name: document.getElementById('cName').value,
+                phone: document.getElementById('cPhone').value,
+                address: document.getElementById('cAddress').value,
+                cart: cartData,
+                time: new Date().toLocaleString()
+            };
+            
+            localStorage.setItem('lastOrder', JSON.stringify(order));
+            localStorage.removeItem('cart');
+            window.location.href = 'order-success.html';
+        });
+    </script>
+</body>
+</html>
