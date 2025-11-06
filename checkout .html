@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout - Dinhata Shop</title>
     <link rel="stylesheet" href="style.css">
-    <script src="navigation.js"></script>
 </head>
 <body>
     <header>
@@ -20,37 +19,71 @@
 
     <div class="checkout-container">
         <h2>Checkout</h2>
+        
+        <div class="order-summary" style="background:#1a1a1a; padding:20px; border-radius:10px; margin-bottom:20px;">
+            <h3>Order Summary</h3>
+            <div id="checkoutItems">
+                <!-- Cart items will show here -->
+            </div>
+            <div style="border-top:1px solid #333; padding-top:10px; margin-top:10px;">
+                <strong>Total: ৳<span id="checkoutTotal">0</span></strong>
+            </div>
+        </div>
+
         <form class="checkout-form" id="checkoutForm">
-            <input type="text" id="cName" placeholder="Your Name" required>
+            <h3>Delivery Information</h3>
+            <input type="text" id="cName" placeholder="Your Full Name" required>
             <input type="tel" id="cPhone" placeholder="Phone Number" required>
-            <input type="text" id="cAddress" placeholder="Delivery Address" required>
+            <input type="text" id="cAddress" placeholder="Full Delivery Address" required>
+            <textarea id="cNotes" placeholder="Additional Notes (Optional)" style="width:100%; height:80px; padding:12px; margin:10px 0; background:#0d0d0d; color:white; border:1px solid #333; border-radius:8px;"></textarea>
+            
             <button type="submit">Place Order</button>
         </form>
     </div>
 
     <script src="script.js"></script>
     <script>
-        document.getElementById('checkoutForm').addEventListener('submit', e => {
-            e.preventDefault();
-            const cartData = getCart();
+        // Load checkout items
+        function loadCheckoutItems() {
+            const container = document.getElementById('checkoutItems');
+            const totalElement = document.getElementById('checkoutTotal');
             
-            if (cartData.length === 0) {
-                alert('Your cart is empty!');
+            if (shop.cart.length === 0) {
+                container.innerHTML = '<p>Your cart is empty</p>';
+                totalElement.textContent = '0';
                 return;
             }
+
+            const total = shop.cart.reduce((sum, item) => sum + item.price, 0);
             
-            const order = {
+            container.innerHTML = shop.cart.map(item => `
+                <div style="display:flex; justify-content:space-between; margin:10px 0; padding:10px; background:#222; border-radius:5px;">
+                    <div>${item.name}</div>
+                    <div>৳${item.price}</div>
+                </div>
+            `).join('');
+            
+            totalElement.textContent = total;
+        }
+
+        // Form submission
+        document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
                 name: document.getElementById('cName').value,
                 phone: document.getElementById('cPhone').value,
                 address: document.getElementById('cAddress').value,
-                cart: cartData,
-                time: new Date().toLocaleString()
+                notes: document.getElementById('cNotes').value
             };
-            
-            localStorage.setItem('lastOrder', JSON.stringify(order));
-            localStorage.removeItem('cart');
-            window.location.href = 'order-success.html';
+
+            if (shop.processCheckout(formData)) {
+                window.location.href = 'order-success.html';
+            }
         });
+
+        // Initial load
+        loadCheckoutItems();
     </script>
 </body>
 </html>
